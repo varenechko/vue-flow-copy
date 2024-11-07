@@ -53,20 +53,16 @@ export default {
     },
     methods: {
         onClick(event) {
-            console.log(event);
-
             if (!this.start) {
                 this.start = {
                     left: event.target.offsetLeft + 50,
                     top: event.target.offsetTop + 100,
                 };
-                console.log('start', JSON.stringify(this.start));
             } else if (!this.end) {
                 this.end = {
                     left: event.target.offsetLeft + 50,
                     top: event.target.offsetTop + 100,
                 };
-                console.log('end', JSON.stringify(this.end));
             }
         },
     },
