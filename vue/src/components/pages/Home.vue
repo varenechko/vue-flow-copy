@@ -1,24 +1,42 @@
 <template>
-  <PageLayout>
-    <section class="p-16">
-      Homepage
-      <button @click="() => openHelpModal()">Open modal</button>
-    </section>
-  </PageLayout>
+    <PageLayout>
+        <div class="home-page">
+            <WorkField />
+            <Button @click="handleClickAddItemToBlocks">Добавить блок</Button>
+        </div>
+    </PageLayout>
 </template>
 
 <script>
-import PageLayout from '../parts/PageLayout'
-import { helpModal } from "@/mixins/modals";
+import { mapActions } from 'vuex';
+import Button from '../parts/Button.vue';
+import PageLayout from '../parts/PageLayout';
+import WorkField from '../parts/WorkField.vue';
 
 export default {
-  name: 'HomePage',
-  mixins: [helpModal],
-  components: {
-    PageLayout
-  }
-}
+    name: 'HomePage',
+    components: {
+        WorkField,
+        PageLayout,
+        Button,
+    },
+    methods: {
+        ...mapActions('blocks', ['addItemToBlocks']),
+        handleClickAddItemToBlocks() {
+            this.addItemToBlocks({
+                startLeft: 0,
+                startTop: 0,
+            });
+        },
+    },
+};
 </script>
 
 <style>
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
 </style>

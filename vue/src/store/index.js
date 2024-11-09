@@ -1,4 +1,4 @@
-import modals from './modals'
+import blocks from './blocks'
 
 export default {
   namespaced: true,
@@ -6,6 +6,6 @@ export default {
   getters: {},
   mutations: {},
   modules: {
-    modals
+    blocks
   }
 }
