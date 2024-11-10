@@ -24,8 +24,8 @@ export default {
         ...mapActions('blocks', ['addItemToBlocks']),
         handleClickAddItemToBlocks() {
             this.addItemToBlocks({
-                startLeft: 0,
-                startTop: 0,
+                left: 0,
+                top: 0,
             });
         },
     },
