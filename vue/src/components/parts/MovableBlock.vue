@@ -10,7 +10,13 @@
         @pointermove="handlePointerMove"
         @pointerdown="handlePointerDown"
         @pointerup="handlePointerUp"
-    ></div>
+    >
+        <div
+            class="moveable-block__connector"
+            @pointerdown="handleConnectorDown"
+            @pointerup="handleConnectorUp"
+        ></div>
+    </div>
 </template>
 
 <script>
@@ -20,6 +26,8 @@ export default {
         startLeft: Number,
         startTop: Number,
         handleMoved: Function,
+        handleStartConnection: Function,
+        handleEndConnection: Function,
     },
     data() {
         return {
@@ -62,6 +70,14 @@ export default {
                 this.handleMoved(this.currentLeft, this.currentTop);
             }
         },
+        handleConnectorDown(event) {
+            event.stopPropagation();
+            this.handleStartConnection(event);
+        },
+        handleConnectorUp(event) {
+            event.stopPropagation();
+            this.handleEndConnection(event);
+        },
     },
 };
 </script>
@@ -76,6 +92,16 @@ export default {
 
     &:active {
         background-color: @cBaseFour;
+    }
+    &__connector {
+        z-index: 3;
+        position: absolute;
+        top: 95px;
+        left: 25px;
+        width: 50px;
+        height: 10px;
+        background-color: @cBaseTwo;
+        border-radius: 10px;
     }
 }
 </style>
