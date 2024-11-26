@@ -3,12 +3,45 @@ export default {
     state: {
         blocks: [],
         connections: [],
+        size: 100,
+        view: {
+            top: 0,
+            left: 0,
+        },
     },
     getters: {
-        getBlocks: (state) => state.blocks,
-        getBlock: (state) => (id) =>
-            state.blocks.find((block) => block.id == id),
+        getBlocks: (state) => {
+            const view = state.view; // потому что вью тупой и не видит что геттер зависит от стейта view
+            console.log(
+                'getting blocks',
+                JSON.stringify(state.blocks),
+                state.blocks.map((block) => ({
+                    top: block.top - view.top,
+                    left: block.left - view.left,
+                }))
+            );
+            return state.blocks.map((block) => ({
+                top: block.top - view.top,
+                left: block.left - view.left,
+            }));
+        },
+        getBlock: (state) => (id) => {
+            const view = state.view; // потому что вью тупой и не видит что геттер зависит от стейта view
+
+            const block = state.blocks.find((block) => block.id == id);
+            console.log('block-', {
+                ...block,
+                top: block.top - view.top,
+                left: block.left - view.left,
+            });
+            return {
+                ...block,
+                top: block.top - view.top,
+                left: block.left - view.left,
+            };
+        },
         getConnections: (state) => state.connections,
+        getSize: (state) => state.size,
     },
     mutations: {
         ADD_ITEM_TO_BLOCKS: (state, newItem) => {
@@ -23,9 +56,20 @@ export default {
                     };
                 return elem;
             });
+            console.log(
+                'changedblock',
+                newBlockData,
+                JSON.stringify(state.blocks)
+            );
         },
         ADD_CONNECTION: (state, connection) => {
             state.connections.push({ id: Date.now(), ...connection });
+        },
+        CHANGE_SIZE: (state, scale) => {
+            state.size = state.size * 10 ** scale;
+        },
+        CHANGE_VIEW: (state, coordinates) => {
+            state.view = { ...coordinates };
         },
     },
     actions: {
@@ -37,6 +81,12 @@ export default {
         },
         addConnection({ commit }, connection) {
             commit('ADD_CONNECTION', connection);
+        },
+        changeSize({ commit }, scale) {
+            commit('CHANGE_SIZE', scale);
+        },
+        changeView({ commit }, scale) {
+            commit('CHANGE_VIEW', scale);
         },
     },
 };

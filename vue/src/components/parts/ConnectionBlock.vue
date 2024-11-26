@@ -14,15 +14,17 @@ export default {
     },
 
     computed: {
-        ...mapGetters('blocks', ['getBlock']),
+        ...mapGetters('blocks', ['getBlock', 'getSize']),
         coordinates() {
             const startblock = this.getBlock(this.connection.start.blockId);
             const endBlock = this.connection.end?.blockId
                 ? {
                       top:
-                          this.getBlock(this.connection.end?.blockId).top + 100,
+                          this.getBlock(this.connection.end?.blockId).top +
+                          this.getSize,
                       left:
-                          this.getBlock(this.connection.end?.blockId).left + 50,
+                          this.getBlock(this.connection.end?.blockId).left +
+                          Math.floor(this.getSize / 2),
                   }
                 : {
                       top: this.connection.end?.top,
@@ -31,8 +33,8 @@ export default {
             if (this.connection.start) {
                 return {
                     start: {
-                        top: startblock.top + 100,
-                        left: startblock.left + 50,
+                        top: startblock.top + this.getSize,
+                        left: startblock.left + Math.floor(this.getSize / 2),
                     },
                     end: {
                         top: endBlock?.top,
