@@ -29,8 +29,6 @@ export default {
     },
     data() {
         return {
-            currentLeft: this.startLeft,
-            currentTop: this.startTop,
             isPointerDown: false,
         };
     },
@@ -43,8 +41,8 @@ export default {
             return {
                 width: `${this.getSize}px`,
                 height: `${this.getSize}px`,
-                left: this.currentLeft + 'px',
-                top: this.currentTop + 'px',
+                left: this.startLeft + 'px',
+                top: this.startTop + 'px',
                 zIndex: this.zIndex,
             };
         },
@@ -67,20 +65,20 @@ export default {
             event.preventDefault();
 
             if (this.isPointerDown) {
-                this.currentLeft =
+                const newLeft =
                     event.pageX <= 50
                         ? 0
                         : event.pageX > 750
                         ? 700
                         : event.pageX - 50;
-                this.currentTop =
+                const newTop =
                     event.pageY <= 50
                         ? 0
                         : event.pageY > 750
                         ? 700
                         : event.pageY - 50;
 
-                this.handleMoved(this.currentLeft, this.currentTop);
+                this.handleMoved(newLeft, newTop);
             }
         },
         handleConnectorDown(event) {

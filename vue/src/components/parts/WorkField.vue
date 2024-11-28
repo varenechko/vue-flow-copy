@@ -94,11 +94,22 @@ export default {
                     left: event.pageX - this.moveStartCoordinates.left,
                     top: event.pageY - this.moveStartCoordinates.top,
                 });
+                this.moveStartCoordinates.left = event.pageX;
+                this.moveStartCoordinates.top = event.pageY;
             }
         },
         handleScale(event) {
-            this.changeSize(event.deltaY * -0.0001);
+            const scale = -event.deltaY * 0.001;
+
+            this.changeSize({
+                scale,
+                coords: {
+                    top: event.pageY,
+                    left: event.pageX,
+                },
+            });
         },
+
         handlePointerDown(event) {
             this.isMovingField = true;
             this.moveStartCoordinates = {
@@ -108,6 +119,9 @@ export default {
             this.$refs.field.setPointerCapture(event.pointerId);
         },
         handlePointerUp(event) {
+            if (this.isCreatingConnection) {
+                this.current = { start: {}, end: {} };
+            }
             this.isMovingField = false;
             this.moveStartCoordinates = {
                 left: 0,
@@ -121,9 +135,11 @@ export default {
 
 <style scoped lang="less">
 .work-field {
+    position: relative;
     width: 800px;
     height: 800px;
     border-radius: 10px;
     background-color: @cBaseThree;
+    overflow: hidden;
 }
 </style>

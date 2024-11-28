@@ -12,15 +12,8 @@ export default {
     getters: {
         getBlocks: (state) => {
             const view = state.view; // потому что вью тупой и не видит что геттер зависит от стейта view
-            console.log(
-                'getting blocks',
-                JSON.stringify(state.blocks),
-                state.blocks.map((block) => ({
-                    top: block.top - view.top,
-                    left: block.left - view.left,
-                }))
-            );
             return state.blocks.map((block) => ({
+                ...block,
                 top: block.top - view.top,
                 left: block.left - view.left,
             }));
@@ -29,11 +22,7 @@ export default {
             const view = state.view; // потому что вью тупой и не видит что геттер зависит от стейта view
 
             const block = state.blocks.find((block) => block.id == id);
-            console.log('block-', {
-                ...block,
-                top: block.top - view.top,
-                left: block.left - view.left,
-            });
+
             return {
                 ...block,
                 top: block.top - view.top,
@@ -44,37 +33,63 @@ export default {
         getSize: (state) => state.size,
     },
     mutations: {
-        ADD_ITEM_TO_BLOCKS: (state, newItem) => {
-            state.blocks.push({ id: Date.now(), ...newItem });
+        ADD_ITEM_TO_BLOCKS: (state) => {
+            state.blocks.push({
+                id: Date.now(),
+                top: state.view.top,
+                left: state.view.left,
+            });
         },
         CHANGE_BLOCK: (state, { id, newBlockData }) => {
             state.blocks = state.blocks.map((elem) => {
                 if (elem.id == id)
                     return {
                         id,
-                        ...newBlockData,
+                        left: state.view.left + newBlockData.left,
+                        top: state.view.top + newBlockData.top,
                     };
                 return elem;
             });
-            console.log(
-                'changedblock',
-                newBlockData,
-                JSON.stringify(state.blocks)
-            );
         },
         ADD_CONNECTION: (state, connection) => {
             state.connections.push({ id: Date.now(), ...connection });
         },
-        CHANGE_SIZE: (state, scale) => {
-            state.size = state.size * 10 ** scale;
+        CHANGE_SIZE: (state, { scale, coords }) => {
+            // Определяем старый масштаб
+            const oldSize = state.size;
+
+            // Обновляем размер
+            state.size = state.size * (1 + scale); // scale может быть положительным или отрицательным
+
+            // Коэффициент изменения размера
+            const scaleFactor = state.size / oldSize;
+
+            // Центр масштабирования в глобальных координатах
+            const globalCoords = {
+                top: coords.top + state.view.top,
+                left: coords.left + state.view.left,
+            };
+
+            // Пересчет координат всех блоков
+            state.blocks = state.blocks.map((block) => {
+                const deltaX = block.left - globalCoords.left;
+                const deltaY = block.top - globalCoords.top;
+
+                return {
+                    ...block,
+                    left: globalCoords.left + deltaX * scaleFactor,
+                    top: globalCoords.top + deltaY * scaleFactor,
+                };
+            });
         },
         CHANGE_VIEW: (state, coordinates) => {
-            state.view = { ...coordinates };
+            state.view.top -= coordinates.top;
+            state.view.left -= coordinates.left;
         },
     },
     actions: {
-        addItemToBlocks({ commit }, newItem) {
-            commit('ADD_ITEM_TO_BLOCKS', newItem);
+        addItemToBlocks({ commit }) {
+            commit('ADD_ITEM_TO_BLOCKS');
         },
         changeBlockById({ commit }, { id, newBlockData }) {
             commit('CHANGE_BLOCK', { id, newBlockData });
