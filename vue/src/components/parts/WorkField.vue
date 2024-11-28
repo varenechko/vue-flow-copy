@@ -26,10 +26,7 @@
             :key="connection.id"
             :connection="connection"
         />
-        <ConnectionBlock
-            v-if="this.current.start.blockId"
-            :connection="this.current"
-        />
+        <ConnectionBlock v-if="current.start.blockId" :connection="current" />
     </div>
 </template>
 

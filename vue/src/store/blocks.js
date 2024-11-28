@@ -55,22 +55,17 @@ export default {
             state.connections.push({ id: Date.now(), ...connection });
         },
         CHANGE_SIZE: (state, { scale, coords }) => {
-            // Определяем старый масштаб
             const oldSize = state.size;
 
-            // Обновляем размер
-            state.size = state.size * (1 + scale); // scale может быть положительным или отрицательным
+            state.size = state.size * (1 + scale);
 
-            // Коэффициент изменения размера
             const scaleFactor = state.size / oldSize;
 
-            // Центр масштабирования в глобальных координатах
             const globalCoords = {
                 top: coords.top + state.view.top,
                 left: coords.left + state.view.left,
             };
 
-            // Пересчет координат всех блоков
             state.blocks = state.blocks.map((block) => {
                 const deltaX = block.left - globalCoords.left;
                 const deltaY = block.top - globalCoords.top;
