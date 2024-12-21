@@ -78,6 +78,7 @@ export default {
       display: flex;
       align-content: flex-start;
       flex-wrap: wrap;
+      overflow: auto;
       height: 20%;
       background-color: cadetblue;
       gap: 13px;

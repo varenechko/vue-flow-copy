@@ -4,7 +4,7 @@ export default {
   namespaced: true,
   state: {
     openedElements: ["water", "fire", "earth", "air"],
-    tableElements: ["", "", "", ""], // not in var cause after mix element didn't delete
+    tableElements: [],
   },
   getters: {
     getOpenedElements: (state) => {
@@ -16,26 +16,16 @@ export default {
   },
   mutations: {
     ADD_ITEM_TO_TABLE: (state, element) => {
-      const index = state.tableElements.indexOf("");
-      console.log(index);
-
-      if (index >= 0) {
-        const copy = [...state.tableElements];
-        copy[index] = element;
-        state.tableElements = copy;
-      }
+      state.tableElements = [...state.tableElements, element];
     },
     CLEAR_TABLE: (state) => {
-      state.tableElements = ["", "", "", ""];
+      state.tableElements = [];
     },
     ADD_OPENED_ELEMENT: (state) => {
       const result = recipes[state.tableElements.toSorted().join("")];
 
       if (result) {
-        state.openedElements = new Set([...state.openedElements, result]);
-        const copy = ["", "", "", ""];
-        copy[0] = result;
-        state.tableElements = copy;
+        state.tableElements = [result];
       }
     },
   },
